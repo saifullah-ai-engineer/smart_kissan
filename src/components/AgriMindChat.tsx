@@ -17,7 +17,7 @@ import {
 
 interface Message {
   id: string
-  type: 'user' | 'agrimind'
+  type: 'user' | 'smartkissan'
   content: string
   timestamp: Date
   messageType?: 'text' | 'speech' | 'image+speech'
@@ -32,11 +32,11 @@ interface Message {
   }
 }
 
-interface AgriMindChatProps {
+interface SmartKissanChatProps {
   onBack: () => void
 }
 
-export default function AgriMindChat({ onBack }: AgriMindChatProps) {
+export default function SmartKissanChat({ onBack }: SmartKissanChatProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputText, setInputText] = useState('')
   const [isRecording, setIsRecording] = useState(false)
@@ -68,10 +68,10 @@ export default function AgriMindChat({ onBack }: AgriMindChatProps) {
     // Add welcome message
     const welcomeMessage: Message = {
       id: '1',
-      type: 'agrimind',
+      type: 'smartkissan',
       content: language === 'en' 
-        ? "Hello! I'm AgriMind, your AI farming companion. I can help you with crop diseases, fertilizer recommendations, weather advice, and more. You can type, speak, or upload images of your crops!"
-        : "السلام علیکم! میں AgriMind ہوں، آپ کا AI کاشتکاری ساتھی۔ میں آپ کی فصلوں کی بیماریوں، کھاد کی سفارشات، موسمی مشورے اور بہت کچھ میں مدد کر سکتا ہوں۔",
+        ? "Hello! I'm Smart Kissan, your AI farming companion. I can help you with crop diseases, fertilizer recommendations, weather advice, and more. You can type, speak, or upload images of your crops!"
+        : "السلام علیکم! میں Smart Kissan ہوں، آپ کا AI کاشتکاری ساتھی۔ میں آپ کی فصلوں کی بیماریوں، کھاد کی سفارشات، موسمی مشورے اور بہت کچھ میں مدد کر سکتا ہوں۔",
       timestamp: new Date()
     }
     setMessages([welcomeMessage])
@@ -105,29 +105,29 @@ export default function AgriMindChat({ onBack }: AgriMindChatProps) {
       // API call to backend
       const response = await callAgriMindAPI(text, type, image)
       
-      const agrimindMessage: Message = {
+      const smartkissanMessage: Message = {
         id: (Date.now() + 1).toString(),
-        type: 'agrimind',
+        type: 'smartkissan',
         content: response.content,
         timestamp: new Date(),
         analysis: response.analysis
       }
 
-      setMessages(prev => [...prev, agrimindMessage])
+      setMessages(prev => [...prev, smartkissanMessage])
     } catch (error) {
       console.error('API call failed:', error)
       
       // Fallback to mock data in offline mode
       const mockResponse = getMockResponse(text, type, image)
-      const agrimindMessage: Message = {
+      const smartkissanMessage: Message = {
         id: (Date.now() + 1).toString(),
-        type: 'agrimind',
+        type: 'smartkissan',
         content: mockResponse.content,
         timestamp: new Date(),
         analysis: mockResponse.analysis
       }
 
-      setMessages(prev => [...prev, agrimindMessage])
+      setMessages(prev => [...prev, smartkissanMessage])
     } finally {
       setIsLoading(false)
     }
@@ -135,7 +135,7 @@ export default function AgriMindChat({ onBack }: AgriMindChatProps) {
 
   const callAgriMindAPI = async (text: string, type: string, image?: string) => {
     // Replace with your actual API endpoint
-    const apiEndpoint = 'https://your-n8n-webhook-url.com/agrimind'
+    const apiEndpoint = 'https://your-n8n-webhook-url.com/smartkissan'
     
     const payload = {
       type,
@@ -336,25 +336,16 @@ export default function AgriMindChat({ onBack }: AgriMindChatProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-amber-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-green-200">
+      <header className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <button
-                onClick={onBack}
-                className="text-green-600 hover:text-green-700 transition-colors duration-200"
-              >
-                <Leaf className="w-6 h-6" />
-              </button>
-              <div className="flex items-center space-x-2">
-                <Bot className="w-8 h-8 text-green-600" />
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900">AgriMind</h1>
-                  <p className="text-xs text-green-600">Your Farm's AI Companion</p>
-                </div>
+              <div className="bg-green-600 p-2 rounded-lg">
+                <Leaf className="w-6 h-6 text-white" />
               </div>
+              <h1 className="text-xl font-bold text-gray-900">Smart Kissan</h1>
             </div>
             
             <div className="flex items-center space-x-3">
@@ -391,9 +382,56 @@ export default function AgriMindChat({ onBack }: AgriMindChatProps) {
       </header>
 
       {/* Chat Messages */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-2xl shadow-lg min-h-[600px] flex flex-col">
-          <div className="flex-1 p-6 overflow-y-auto space-y-4">
+      <div className="flex-1 flex flex-col">
+        {/* Welcome Section */}
+        {messages.length <= 1 && (
+          <div className="flex-1 flex items-center justify-center px-4 py-12">
+            <div className="text-center max-w-2xl">
+              <div className="mb-8">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Leaf className="w-8 h-8 text-green-600" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome to Smart Kissan!</h2>
+                <p className="text-lg text-green-600 font-semibold mb-4">Smart Kissan Smart Pakistan</p>
+                <p className="text-gray-600 mb-8">
+                  Send a photo of your crop, describe an issue, or ask any farming question.
+                </p>
+              </div>
+              
+              {/* Feature Icons */}
+              <div className="grid grid-cols-4 gap-6 mb-8">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <span className="text-2xl">🌦</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Weather</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <span className="text-2xl">🐛</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Disease</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <span className="text-2xl">💧</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Soil</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <span className="text-2xl">🌿</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Fertilizer</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Messages */}
+        {messages.length > 1 && (
+          <div className="flex-1 overflow-y-auto px-4 py-6">
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -407,7 +445,7 @@ export default function AgriMindChat({ onBack }: AgriMindChatProps) {
                   }`}
                 >
                   <div className="flex items-start space-x-2">
-                    {message.type === 'agrimind' && (
+                    {message.type === 'smartkissan' && (
                       <Bot className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     )}
                     {message.type === 'user' && (
@@ -474,7 +512,7 @@ export default function AgriMindChat({ onBack }: AgriMindChatProps) {
                         </div>
                       )}
                       
-                      {message.type === 'agrimind' && (
+                      {message.type === 'smartkissan' && (
                         <button
                           onClick={() => playMessage(message.id, message.content)}
                           className="mt-2 flex items-center space-x-1 text-xs text-green-600 hover:text-green-700 transition-colors duration-200"
@@ -510,13 +548,15 @@ export default function AgriMindChat({ onBack }: AgriMindChatProps) {
             
             <div ref={messagesEndRef} />
           </div>
+        )}
 
-          {/* Input Area */}
-          <div className="border-t border-gray-200 p-4">
+        {/* Input Area */}
+        <div className="bg-white border-t border-gray-200 p-4">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="p-3 bg-amber-100 text-amber-700 rounded-full hover:bg-amber-200 transition-colors duration-200"
+                className="p-3 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors duration-200"
                 title="Upload crop image"
               >
                 <Camera className="w-5 h-5" />
@@ -526,8 +566,8 @@ export default function AgriMindChat({ onBack }: AgriMindChatProps) {
                 onClick={isRecording ? stopRecording : startRecording}
                 className={`p-3 rounded-full transition-colors duration-200 ${
                   isRecording
-                    ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                    : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                    ? 'bg-red-500 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
                 title={isRecording ? 'Stop recording' : 'Start voice input'}
               >
@@ -540,8 +580,8 @@ export default function AgriMindChat({ onBack }: AgriMindChatProps) {
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(inputText)}
-                  placeholder={language === 'en' ? "Ask about crops, diseases, fertilizers..." : "فصلوں، بیماریوں، کھادوں کے بارے میں پوچھیں..."}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                  placeholder={language === 'en' ? "Ask about your crops, diseases, fertilizers..." : "فصلوں، بیماریوں، کھادوں کے بارے میں پوچھیں..."}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-gray-700"
                   disabled={isRecording}
                 />
               </div>
@@ -549,9 +589,9 @@ export default function AgriMindChat({ onBack }: AgriMindChatProps) {
               <button
                 onClick={() => handleSendMessage(inputText)}
                 disabled={!inputText.trim() || isLoading}
-                className="p-3 bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-3 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Send className="w-5 h-5" />
+                <Send className="w-5 h-5 transform rotate-45" />
               </button>
             </div>
             
@@ -567,7 +607,7 @@ export default function AgriMindChat({ onBack }: AgriMindChatProps) {
       </div>
 
       {/* Footer */}
-      <footer className="text-center py-6 text-gray-600">
+      <footer className="text-center py-4 text-gray-500 bg-white border-t">
         <p className="text-sm">Built at National Agentic AI Hackathon 2025</p>
       </footer>
 

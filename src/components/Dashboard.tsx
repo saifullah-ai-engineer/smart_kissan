@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { MessageCircle, LogOut, User, Leaf, Bot } from 'lucide-react'
 import { supabase } from '../lib/supabase'
-import AgriMindChat from './AgriMindChat'
+import SmartKissanChat from './SmartKissanChat'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 interface DashboardProps {
@@ -30,7 +30,7 @@ export default function Dashboard({ onSignOut }: DashboardProps) {
   }
 
   if (showChat) {
-    return <AgriMindChat onBack={() => setShowChat(false)} />
+    return <SmartKissanChat onBack={() => setShowChat(false)} />
   }
 
   return (
@@ -67,60 +67,69 @@ export default function Dashboard({ onSignOut }: DashboardProps) {
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center">
-          <div className="mb-8">
-            <div className="bg-green-100 p-4 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
-              <Leaf className="w-10 h-10 text-green-600" />
+        <div className="text-center bg-white rounded-2xl shadow-lg p-12">
+          {/* Hero Icons */}
+          <div className="flex justify-center space-x-4 mb-8">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+              <Bot className="w-8 h-8 text-green-600" />
             </div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Welcome to Smart Kissan
-            </h2>
-            <p className="text-lg font-semibold text-green-600 mb-4">Smart Kissan Smart Pakistan</p>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Your intelligent agricultural assistant is ready to help you with farming insights, 
-              crop recommendations, and agricultural best practices.
-            </p>
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+              <Leaf className="w-8 h-8 text-green-600" />
+            </div>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="bg-green-100 p-3 rounded-lg w-12 h-12 mx-auto mb-4 flex items-center justify-center">
-                <Bot className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">AgriMind Chat</h3>
-              <p className="text-gray-600">AI-powered farming assistant with voice and image support</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="bg-blue-100 p-3 rounded-lg w-12 h-12 mx-auto mb-4 flex items-center justify-center">
-                <Leaf className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Crop Insights</h3>
-              <p className="text-gray-600">Receive personalized crop recommendations</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="bg-orange-100 p-3 rounded-lg w-12 h-12 mx-auto mb-4 flex items-center justify-center">
-                <User className="w-6 h-6 text-orange-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Expert Advice</h3>
-              <p className="text-gray-600">Access agricultural expertise anytime</p>
-            </div>
+          
+          <div className="mb-8">
+            <h2 className="text-5xl font-bold mb-4">
+              <span className="text-green-600">Smart Kissan:</span> <span className="text-gray-900">Your Farm's AI Companion</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+              Chat with AI about your crops. Send photos, describe problems by voice, 
+              and get instant expert advice on diseases, fertilizers, and farming practices.
+            </p>
           </div>
 
           <button
             onClick={handleStartChat}
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-8 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center space-x-3"
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl inline-flex items-center space-x-3 mb-12"
           >
-            <Bot className="w-6 h-6" />
-            <span>Start AgriMind Chat</span>
+            <MessageCircle className="w-6 h-6" />
+            <span>Start Chat</span>
           </button>
           
-          <p className="mt-4 text-gray-600 text-center">
-            🎤 Voice • 📷 Image • 💬 Text • 🌍 Multi-language
-          </p>
+          {/* Feature Icons */}
+          <div className="grid grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-3xl">🌦</span>
+              </div>
+              <p className="text-gray-700 font-medium">Weather</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-3xl">🐛</span>
+              </div>
+              <p className="text-gray-700 font-medium">Disease</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-3xl">💧</span>
+              </div>
+              <p className="text-gray-700 font-medium">Soil</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-3xl">🌿</span>
+              </div>
+              <p className="text-gray-700 font-medium">Fertilizer</p>
+            </div>
+          </div>
         </div>
       </main>
+      
+      {/* Footer */}
+      <footer className="text-center py-6 text-gray-500">
+        <p className="text-sm">Built at National Agentic AI Hackathon 2025</p>
+      </footer>
     </div>
   )
 }
