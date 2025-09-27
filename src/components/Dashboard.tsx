@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { MessageCircle, LogOut, User, Leaf } from 'lucide-react'
+import { MessageCircle, LogOut, User, Leaf, Bot } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import AgriMindChat from './AgriMindChat'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 interface DashboardProps {
@@ -9,6 +10,7 @@ interface DashboardProps {
 
 export default function Dashboard({ onSignOut }: DashboardProps) {
   const [user, setUser] = useState<SupabaseUser | null>(null)
+  const [showChat, setShowChat] = useState(false)
 
   useEffect(() => {
     const getUser = async () => {
@@ -24,8 +26,11 @@ export default function Dashboard({ onSignOut }: DashboardProps) {
   }
 
   const handleStartChat = () => {
-    // This is where you would implement the chat functionality
-    alert('Chat functionality would start here!')
+    setShowChat(true)
+  }
+
+  if (showChat) {
+    return <AgriMindChat onBack={() => setShowChat(false)} />
   }
 
   return (
@@ -79,16 +84,16 @@ export default function Dashboard({ onSignOut }: DashboardProps) {
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="bg-blue-100 p-3 rounded-lg w-12 h-12 mx-auto mb-4 flex items-center justify-center">
-                <MessageCircle className="w-6 h-6 text-blue-600" />
+              <div className="bg-green-100 p-3 rounded-lg w-12 h-12 mx-auto mb-4 flex items-center justify-center">
+                <Bot className="w-6 h-6 text-green-600" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Smart Chat</h3>
-              <p className="text-gray-600">Get instant answers to your agricultural questions</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">AgriMind Chat</h3>
+              <p className="text-gray-600">AI-powered farming assistant with voice and image support</p>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="bg-green-100 p-3 rounded-lg w-12 h-12 mx-auto mb-4 flex items-center justify-center">
-                <Leaf className="w-6 h-6 text-green-600" />
+              <div className="bg-blue-100 p-3 rounded-lg w-12 h-12 mx-auto mb-4 flex items-center justify-center">
+                <Leaf className="w-6 h-6 text-blue-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Crop Insights</h3>
               <p className="text-gray-600">Receive personalized crop recommendations</p>
@@ -105,11 +110,15 @@ export default function Dashboard({ onSignOut }: DashboardProps) {
 
           <button
             onClick={handleStartChat}
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-8 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-8 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center space-x-3"
           >
-            <MessageCircle className="w-6 h-6 inline mr-2" />
-            Start Chatting with Smart Kissan
+            <Bot className="w-6 h-6" />
+            <span>Start AgriMind Chat</span>
           </button>
+          
+          <p className="mt-4 text-gray-600 text-center">
+            🎤 Voice • 📷 Image • 💬 Text • 🌍 Multi-language
+          </p>
         </div>
       </main>
     </div>
