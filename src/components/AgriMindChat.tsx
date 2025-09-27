@@ -134,8 +134,12 @@ export default function SmartKissanChat({ onBack }: SmartKissanChatProps) {
   }
 
   const callAgriMindAPI = async (text: string, type: string, image?: string) => {
-    // Replace with your actual API endpoint
-    const apiEndpoint = 'https://your-n8n-webhook-url.com/smartkissan'
+    const apiEndpoint = import.meta.env.VITE_AGRIMIND_API_URL
+    
+    // Check if API endpoint is properly configured
+    if (!apiEndpoint || apiEndpoint === 'your_agrimind_api_url') {
+      throw new Error('AgriMind API endpoint not configured. Please set VITE_AGRIMIND_API_URL in your .env file.')
+    }
     
     const payload = {
       type,
