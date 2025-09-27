@@ -296,21 +296,27 @@ export default function SmartKissanChat({ onBack }: SmartKissanChatProps) {
   }
 
   const playMessage = (messageId: string, text: string) => {
-    if (synthRef.current) {
+    if ('speechSynthesis' in window) {
       if (currentlyPlaying === messageId) {
-        synthRef.current.cancel()
+        window.speechSynthesis.cancel()
         setCurrentlyPlaying(null)
         return
       }
 
-      synthRef.current.cancel()
+      window.speechSynthesis.cancel()
       const utterance = new SpeechSynthesisUtterance(text)
       utterance.lang = language === 'en' ? 'en-US' : 'ur-PK'
+      utterance.rate = 0.9
+      utterance.pitch = 1
+      utterance.volume = 1
       utterance.onstart = () => setCurrentlyPlaying(messageId)
       utterance.onend = () => setCurrentlyPlaying(null)
       utterance.onerror = () => setCurrentlyPlaying(null)
       
-      synthRef.current.speak(utterance)
+      setCurrentlyPlaying(messageId)
+      window.speechSynthesis.speak(utterance)
+    } else {
+      console.warn('Speech synthesis not supported in this browser')
     }
   }
 
@@ -462,7 +468,7 @@ export default function SmartKissanChat({ onBack }: SmartKissanChatProps) {
                         <img
                           src={message.image}
                           alt="Uploaded crop"
-                          className="w-full h-32 object-cover rounded-lg mb-2"
+                          className="w-full max-w-xs h-48 object-cover rounded-lg mb-2 border border-gray-200"
                         />
                       )}
                       <p className="text-sm">{message.content}</p>
@@ -521,7 +527,7 @@ export default function SmartKissanChat({ onBack }: SmartKissanChatProps) {
                       {message.type === 'smartkissan' && (
                         <button
                           onClick={() => playMessage(message.id, message.content)}
-                          className="mt-2 flex items-center space-x-1 text-xs text-green-600 hover:text-green-700 transition-colors duration-200"
+                          className="mt-2 flex items-center space-x-1 text-xs text-green-600 hover:text-green-700 transition-colors duration-200 bg-green-50 px-2 py-1 rounded-full"
                         >
                           {currentlyPlaying === message.id ? (
                             <Pause className="w-3 h-3" />
