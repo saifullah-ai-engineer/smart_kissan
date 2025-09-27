@@ -304,17 +304,55 @@ export default function SmartKissanChat({ onBack }: SmartKissanChatProps) {
       }
 
       window.speechSynthesis.cancel()
-      const utterance = new SpeechSynthesisUtterance(text)
-      utterance.lang = language === 'en' ? 'en-US' : 'ur-PK'
-      utterance.rate = 0.9
-      utterance.pitch = 1
-      utterance.volume = 1
-      utterance.onstart = () => setCurrentlyPlaying(messageId)
-      utterance.onend = () => setCurrentlyPlaying(null)
-      utterance.onerror = () => setCurrentlyPlaying(null)
       
-      setCurrentlyPlaying(messageId)
-      window.speechSynthesis.speak(utterance)
+      // Wait for voices to load
+      const speakText = () => {
+        const utterance = new SpeechSynthesisUtterance(text)
+        const voices = window.speechSynthesis.getVoices()
+        
+        if (language === 'ur') {
+          // Try to find Urdu voice
+          const urduVoice = voices.find(voice => 
+            voice.lang.includes('ur') || 
+            voice.lang.includes('hi') || 
+            voice.name.toLowerCase().includes('urdu') ||
+            voice.name.toLowerCase().includes('hindi')
+          )
+          if (urduVoice) {
+            utterance.voice = urduVoice
+          }
+          utterance.lang = 'ur-PK'
+        } else {
+          // English voice
+          const englishVoice = voices.find(voice => 
+            voice.lang.includes('en-US') || voice.lang.includes('en')
+          )
+          if (englishVoice) {
+            utterance.voice = englishVoice
+          }
+          utterance.lang = 'en-US'
+        }
+        
+        utterance.rate = 0.8
+        utterance.pitch = 1
+        utterance.volume = 1
+        utterance.onstart = () => setCurrentlyPlaying(messageId)
+        utterance.onend = () => setCurrentlyPlaying(null)
+        utterance.onerror = (event) => {
+          console.warn('Speech synthesis error:', event)
+          setCurrentlyPlaying(null)
+        }
+        
+        setCurrentlyPlaying(messageId)
+        window.speechSynthesis.speak(utterance)
+      }
+      
+      // Check if voices are loaded
+      if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.addEventListener('voiceschanged', speakText, { once: true })
+      } else {
+        speakText()
+      }
     } else {
       console.warn('Speech synthesis not supported in this browser')
     }
