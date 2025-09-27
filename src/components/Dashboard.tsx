@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { MessageCircle, LogOut, User, Leaf, Bot } from 'lucide-react'
 import { supabase } from '../lib/supabase'
-import SmartKissanChat from './SmartKissanChat'
+import SmartKissanChat from './AgriMindChat'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 interface DashboardProps {
