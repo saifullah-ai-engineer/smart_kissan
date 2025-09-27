@@ -136,9 +136,11 @@ export default function SmartKissanChat({ onBack }: SmartKissanChatProps) {
   const callAgriMindAPI = async (text: string, type: string, image?: string) => {
     const apiEndpoint = import.meta.env.VITE_AGRIMIND_API_URL
     
-    // Check if API endpoint is properly configured
-    if (!apiEndpoint || apiEndpoint === 'your_agrimind_api_url') {
-      throw new Error('AgriMind API endpoint not configured. Please set VITE_AGRIMIND_API_URL in your .env file.')
+    // If API endpoint is not configured, use mock responses
+    if (!apiEndpoint || apiEndpoint === 'your_agrimind_api_url' || apiEndpoint.includes('placeholder')) {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      return getMockResponse(text, type, image)
     }
     
     const payload = {
