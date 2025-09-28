@@ -10,7 +10,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // N8N Webhook URL
-const N8N_WEBHOOK_URL = 'http://localhost:5678/webhook-test/e321d96c-a2fe-48c1-96cf-3ceadf97016a';
+const N8N_WEBHOOK_URL = 'https://8f12498ee627.ngrok-free.app/webhook-test/e321d96c-a2fe-48c1-96cf-3ceadf97016a';
 
 // Webhook endpoint to receive POST requests
 app.post('/webhook', async (req, res) => {
