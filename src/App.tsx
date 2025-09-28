@@ -36,7 +36,7 @@ function App() {
         setUser(session?.user ?? null)
         setLoading(false)
       })
-      subscription = data
+      subscription = data.subscription
     }
 
     return () => {
