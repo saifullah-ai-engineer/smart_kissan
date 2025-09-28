@@ -14,6 +14,7 @@ import {
   User,
   Leaf
 } from 'lucide-react'
+import { webhookService, type WebhookPayload } from '../services/webhookService'
 
 interface Message {
   id: string
@@ -102,15 +103,32 @@ export default function SmartKissanChat({ onBack }: SmartKissanChatProps) {
     setIsLoading(true)
 
     try {
-      // API call to backend
-      const response = await callAgriMindAPI(text, type, image)
+      // Send to N8N webhook
+      const webhookPayload: WebhookPayload = {
+        type,
+        content: text,
+        language,
+        farmerName: 'Smart Kissan User',
+        crop: 'General',
+        query: text,
+        ...(image && { image }),
+        ...(type === 'image+speech' && { speech_text: text })
+      }
+
+      const response = await webhookService.sendToWebhook(webhookPayload)
       
       const smartkissanMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'smartkissan',
-        content: response.content,
+        content: response.success 
+          ? (response.n8nResponse || response.message)
+          : `Error: ${response.error || response.message}`,
         timestamp: new Date(),
-        analysis: response.analysis
+        analysis: response.success ? {
+          recommendations: ['Response received from N8N webhook'],
+          weather: 'Data processed through Smart Kissan AI pipeline',
+          irrigation: 'N8N webhook integration active'
+        } : undefined
       }
 
       setMessages(prev => [...prev, smartkissanMessage])
@@ -130,58 +148,6 @@ export default function SmartKissanChat({ onBack }: SmartKissanChatProps) {
       setMessages(prev => [...prev, smartkissanMessage])
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  const callAgriMindAPI = async (text: string, type: string, image?: string) => {
-    const apiEndpoint = import.meta.env.VITE_N8N_WEBHOOK_URL
-    
-    // If API endpoint is not configured, use mock responses
-    if (!apiEndpoint || apiEndpoint.includes('localhost:5678') === false) {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      return getMockResponse(text, type, image)
-    }
-    
-    const payload = {
-      type,
-      content: text,
-      language,
-      farmerName: 'Smart Kissan User',
-      crop: 'General',
-      query: text,
-      ...(image && { image }),
-      ...(type === 'image+speech' && { speech_text: text })
-    }
-
-    const response = await fetch(apiEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-    })
-
-    if (!response.ok) {
-      throw new Error('API call failed')
-    }
-
-    // Handle both JSON and text responses from n8n webhook
-    let result
-    try {
-      result = await response.json()
-    } catch {
-      result = await response.text()
-    }
-    
-    // Format the response for our chat interface
-    return {
-      content: typeof result === 'string' ? result : JSON.stringify(result, null, 2),
-      analysis: {
-        recommendations: ['Response received from n8n webhook'],
-        weather: 'Data processed through Smart Kissan AI pipeline',
-        irrigation: 'Webhook integration active'
-      }
     }
   }
 
