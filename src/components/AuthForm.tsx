@@ -23,8 +23,8 @@ export default function AuthForm({ mode, onToggle, onSuccess }: AuthFormProps) {
 
     // Check if Supabase is properly configured
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-    if (!supabaseUrl || supabaseUrl.includes('placeholder') || supabaseUrl.includes('your-project')) {
-      setError('Supabase is not configured. Please set up your Supabase project credentials.')
+    if (!supabaseUrl || supabaseUrl.includes('your_supabase_project_url')) {
+      setError('Supabase is not configured. Please click the Supabase button in settings to connect your database.')
       setLoading(false)
       return
     }

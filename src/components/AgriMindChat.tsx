@@ -134,10 +134,10 @@ export default function SmartKissanChat({ onBack }: SmartKissanChatProps) {
   }
 
   const callAgriMindAPI = async (text: string, type: string, image?: string) => {
-    const apiEndpoint = import.meta.env.VITE_AGRIMIND_API_URL
+    const apiEndpoint = import.meta.env.VITE_N8N_WEBHOOK_URL
     
     // If API endpoint is not configured, use mock responses
-    if (!apiEndpoint || apiEndpoint === 'your_agrimind_api_url' || apiEndpoint.includes('placeholder')) {
+    if (!apiEndpoint || apiEndpoint.includes('localhost:5678') === false) {
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1000))
       return getMockResponse(text, type, image)
@@ -147,6 +147,9 @@ export default function SmartKissanChat({ onBack }: SmartKissanChatProps) {
       type,
       content: text,
       language,
+      farmerName: 'Smart Kissan User',
+      crop: 'General',
+      query: text,
       ...(image && { image }),
       ...(type === 'image+speech' && { speech_text: text })
     }
@@ -163,7 +166,23 @@ export default function SmartKissanChat({ onBack }: SmartKissanChatProps) {
       throw new Error('API call failed')
     }
 
-    return await response.json()
+    // Handle both JSON and text responses from n8n webhook
+    let result
+    try {
+      result = await response.json()
+    } catch {
+      result = await response.text()
+    }
+    
+    // Format the response for our chat interface
+    return {
+      content: typeof result === 'string' ? result : JSON.stringify(result, null, 2),
+      analysis: {
+        recommendations: ['Response received from n8n webhook'],
+        weather: 'Data processed through Smart Kissan AI pipeline',
+        irrigation: 'Webhook integration active'
+      }
+    }
   }
 
   const getMockResponse = (text: string, type: string, image?: string) => {

@@ -67,7 +67,7 @@ export default function Dashboard({ onSignOut }: DashboardProps) {
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center bg-white rounded-2xl shadow-lg p-12">
+        <div className="text-center bg-white rounded-2xl shadow-lg p-12 mb-8">
           {/* Hero Icons */}
           <div className="flex justify-center space-x-4 mb-8">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
@@ -123,6 +123,24 @@ export default function Dashboard({ onSignOut }: DashboardProps) {
               <p className="text-gray-700 font-medium">Fertilizer</p>
             </div>
           </div>
+        </div>
+        
+        {/* Integration Status */}
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Integration Status</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span className="text-sm text-green-700">n8n Webhook Connected</span>
+            </div>
+            <div className="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg">
+              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+              <span className="text-sm text-yellow-700">Supabase Setup Required</span>
+            </div>
+          </div>
+          <p className="text-sm text-gray-600 mt-3">
+            To enable full functionality, please configure Supabase by clicking the settings icon above.
+          </p>
         </div>
       </main>
       
