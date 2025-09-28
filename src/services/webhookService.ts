@@ -20,7 +20,7 @@ export interface WebhookResponse {
 
 class WebhookService {
   private readonly webhookUrl = 'http://localhost:5678/webhook';
-  private readonly n8nWebhookUrl = 'http://localhost:5678/webhook-test/e321d96c-a2fe-48c1-96cf-3ceadf97016a';
+  private readonly n8nWebhookUrl = 'https://8f12498ee627.ngrok-free.app/webhook/e321d96c-a2fe-48c1-96cf-3ceadf97016a';
 
   /**
    * Send data to N8N webhook via our backend server
