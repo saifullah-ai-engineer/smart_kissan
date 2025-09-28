@@ -12,18 +12,38 @@ function App() {
 
   useEffect(() => {
     // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
+    const checkSession = async () => {
+      try {
+        // Only check session if Supabase is properly configured
+        if (!import.meta.env.VITE_SUPABASE_URL?.includes('placeholder')) {
+          const { data: { session } } = await supabase.auth.getSession()
+          setUser(session?.user ?? null)
+        }
+      } catch (error) {
+        console.warn('Supabase not configured:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    checkSession()
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
+    let subscription: any = null
+    
+    if (!import.meta.env.VITE_SUPABASE_URL?.includes('placeholder')) {
+      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(session?.user ?? null)
+        setLoading(false)
+      })
+      subscription = data
+    }
 
-    return () => subscription.unsubscribe()
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe()
+      }
+    }
   }, [])
 
   const handleAuthSuccess = () => {

@@ -133,14 +133,32 @@ export default function Dashboard({ onSignOut }: DashboardProps) {
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
               <span className="text-sm text-green-700">n8n Webhook Connected</span>
             </div>
-            <div className="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg">
-              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-              <span className="text-sm text-yellow-700">Supabase Setup Required</span>
+            <div className={`flex items-center space-x-3 p-3 rounded-lg ${
+              import.meta.env.VITE_SUPABASE_URL?.includes('placeholder') 
+                ? 'bg-yellow-50' 
+                : 'bg-green-50'
+            }`}>
+              <div className={`w-3 h-3 rounded-full ${
+                import.meta.env.VITE_SUPABASE_URL?.includes('placeholder') 
+                  ? 'bg-yellow-500' 
+                  : 'bg-green-500'
+              }`}></div>
+              <span className={`text-sm ${
+                import.meta.env.VITE_SUPABASE_URL?.includes('placeholder') 
+                  ? 'text-yellow-700' 
+                  : 'text-green-700'
+              }`}>
+                {import.meta.env.VITE_SUPABASE_URL?.includes('placeholder') 
+                  ? 'Supabase Setup Required' 
+                  : 'Supabase Connected'}
+              </span>
             </div>
           </div>
-          <p className="text-sm text-gray-600 mt-3">
-            To enable full functionality, please configure Supabase by clicking the settings icon above.
-          </p>
+          {import.meta.env.VITE_SUPABASE_URL?.includes('placeholder') && (
+            <p className="text-sm text-gray-600 mt-3">
+              To enable full functionality, please configure Supabase by clicking the settings icon above.
+            </p>
+          )}
         </div>
       </main>
       
